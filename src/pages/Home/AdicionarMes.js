@@ -1,31 +1,53 @@
-import React from "react";
-
+import React, { useState, useRef } from "react";
+import { Redirect } from "react-router-dom";
 const minAno = 2019;
 const maxAno = 2022;
 
 export default function AdicionarMes() {
+  const refAno = useRef();
+  const refMes = useRef();
+  const [redir, setRedir] = useState("");
   const anos = [];
+  const meses = [];
+
   for (let i = minAno; i <= maxAno; i++) {
     anos.push(i);
   }
-  const saveNew = () => {
-    // post({ valor: 10, decricao: "olá" });
+
+  for (let i = 1; i <= 12; i++) {
+    if (i < 10) {
+      meses.push("0" + i);
+    } else {
+      meses.push(i);
+    }
+  }
+
+  const verMes = () => {
+    setRedir(refAno.current.value + "-" + refMes.current.value);
   };
-  const doRemove = () => {
-    // remove("movimentacoes/2019-08/-LwVqHT1KwM5bT2K5Nam");
-  };
+
+  if (redir !== "") {
+    return <Redirect to={"/movimentacoes/" + redir} />;
+  }
+
   return (
     <>
       <h2>Adicionar mês</h2>
-      <select>
-        <option value="2019">2019</option>
-        <option value="2020">2020</option>
+      <select ref={refAno}>
+        {anos.map(ano => (
+          <option key={ano} value={ano}>
+            {ano}
+          </option>
+        ))}
       </select>
-      <select>
-        <option value="01">01</option>
-        <option value="02">02</option>
+      <select ref={refMes}>
+        {meses.map(mes => (
+          <option key={mes} value={mes}>
+            {mes}
+          </option>
+        ))}
       </select>
-      <button onClick>Adicionar mês</button>
+      <button onClick={verMes}>Adicionar mês</button>
       <button onClick>Delete</button>
     </>
   );
